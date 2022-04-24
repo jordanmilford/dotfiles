@@ -1,0 +1,11 @@
+- brew:
+  - wget
+  - git
+  - git-lfs
+  - gh
+  - lua-language-server
+  - mosh --HEAD
+  - neovim --HEAD
+  - rbenv
+  - ripgrep
+  - exa
