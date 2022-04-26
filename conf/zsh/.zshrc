@@ -45,7 +45,6 @@ plugins=(
   git
   vagrant
   wd
-  osx
   postgres
   npm
   yarn
