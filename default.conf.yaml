@@ -1,5 +1,10 @@
 - clean: ['~']
 
 - link:
-    ~/.config/nvim/init.lua: conf/nvim/init.lua
-    ~/.zshrc: conf/zsh/.zshrc
+    ~/.config/nvim/init.lua:
+      path: conf/nvim/init.lua
+      create: true
+    ~/.zshrc:
+      path: conf/zsh/.zshrc
+      force: true
+      create: true
