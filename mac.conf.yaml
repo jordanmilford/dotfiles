@@ -7,5 +7,6 @@
   - mosh --HEAD
   - neovim --HEAD
   - rbenv
+  - nvm
   - ripgrep
   - exa
