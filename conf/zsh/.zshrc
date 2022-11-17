@@ -88,6 +88,8 @@ bindkey '\er' replace-string
 # Set personal aliases, overriding those provided by oh-my-zsh libs
 alias c="clear"
 alias vim="nvim"
+alias vimr="nvim -R"
+alias grep="rg"
 alias ls="exa -xa --group-directories-first"
 alias ll="exa -al --group-directories-first"
 alias zshrc="vim ~/.zshrc"
