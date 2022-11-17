@@ -1,15 +1,18 @@
 - create:
   - ~/.nvm
 
+- install-brew: true
 - brew:
-  - wget
+  - docker
+  - docker-compose
+  - exa
+  - gh
   - git
   - git-lfs
-  - gh
   - lua-language-server
   - mosh --HEAD
   - neovim --HEAD
   - rbenv
   - nvm
   - ripgrep
-  - exa
+  - wget
