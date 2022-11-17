@@ -28,13 +28,19 @@ require('packer').startup(function(use)
   use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
   --
   use 'psliwka/vim-smoothie' -- Smooth scrolling
-  use 'mhinz/vim-startify' -- Startup screen
   use 'dracula/vim' -- Dracula theme
   use 'kyazdani42/nvim-web-devicons' -- File type icons
   use 'romgrk/barbar.nvim' -- Add buffer bar
   use 'nvim-lualine/lualine.nvim' -- Fancier statusline
   use 'lukas-reineke/indent-blankline.nvim' -- Add indentation guides even on blank lines
   use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' } } -- Add git related info in the signs columns and popups
+  use {
+    "startup-nvim/startup.nvim",
+    requires = {"nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim"},
+    config = function()
+      require"startup".setup({ theme = 'startify' })
+    end
+  }
   use 'nvim-treesitter/nvim-treesitter' -- Highlight, edit, and navigate code using a fast incremental parsing library
   use 'nvim-treesitter/nvim-treesitter-textobjects' -- Additional textobjects for treesitter
   use 'neovim/nvim-lspconfig' -- Collection of configurations for built-in LSP client
@@ -42,7 +48,10 @@ require('packer').startup(function(use)
   use 'hrsh7th/cmp-nvim-lsp'
   use 'saadparwaiz1/cmp_luasnip'
   use 'L3MON4D3/LuaSnip' -- Snippets plugin
-  use "rafamadriz/friendly-snippets" -- vscode format snippets
+  use 'rafamadriz/friendly-snippets' -- vscode format snippets
+  use 'gpanders/editorconfig.nvim' -- EditorConfig support
+  use 'joukevandermaas/vim-ember-hbs' -- Ember.js HBS highlighting
+  use 'vim-test/vim-test' -- Run tests from nvim
 end)
 
 local keymapSilentNore = { noremap = true, silent = true }
@@ -54,7 +63,7 @@ vim.o.hlsearch = false
 vim.wo.number = true
 
 --Enable mouse mode
-vim.o.mouse = 'a'
+-- vim.o.mouse = 'a'
 
 -- Enable break indent
 vim.o.breakindent = true
@@ -170,6 +179,11 @@ vim.api.nvim_set_keymap('n', 'K', ':BufferNext<CR>', keymapSilentNore)
 vim.api.nvim_set_keymap('n', 'J', ':BufferPrevious<CR>', keymapSilentNore)
 vim.api.nvim_set_keymap('n', '<leader>x', ':BufferClose<CR>', keymapSilentNore)
 
+-- vim-test keymaps
+vim.api.nvim_set_keymap('n', '<leader>tf', ':TestFile<CR>', keymapSilentNore)
+vim.api.nvim_set_keymap('n', '<leader>tn', ':TestNearest<CR>', keymapSilentNore)
+vim.g['test#ruby#rspec#options'] = { all = '--format documentation' }
+
 -- Remap for dealing with word wrap
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
@@ -218,7 +232,7 @@ require('telescope').load_extension 'fzf'
 
 -- Add telescope leader shortcuts
 vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers)
-vim.keymap.set('n', '<leader>sf', function()
+vim.keymap.set('n', '<leader>f', function()
   require('telescope.builtin').find_files { previewer = false }
 end)
 vim.keymap.set('n', '<leader>sb', require('telescope.builtin').current_buffer_fuzzy_find)
@@ -309,21 +323,27 @@ local on_attach = function(_, bufnr)
   vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
   vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
   vim.keymap.set('n', '<leader>so', require('telescope.builtin').lsp_document_symbols, opts)
-  vim.api.nvim_create_user_command("Format", vim.lsp.buf.formatting, {})
+  -- vim.api.nvim_create_user_command("Format", vim.lsp.buf.formatting, {})
 end
 
 -- nvim-cmp supports additional completion capabilities
 local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
+capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
 -- Enable the following language servers with default config
-local servers = { 'tsserver', 'eslint', 'cssls', 'solargraph' }
+local servers = { 'tsserver', 'eslint', 'cssls', 'solargraph', 'yamlls' }
 for _, lsp in ipairs(servers) do
   lspconfig[lsp].setup {
     on_attach = on_attach,
     capabilities = capabilities,
   }
 end
+
+-- Configure Ember.js language server
+lspconfig.ember.setup {
+  filetypes = { "javascript", "handlebars" }
+}
+
 
 -- Configure cssmodules language server
 lspconfig.cssmodules_ls.setup {
