@@ -90,6 +90,7 @@ alias c="clear"
 alias vim="nvim"
 alias vimr="nvim -R"
 alias grep="rg"
+alias f="rg -F"
 alias ls="exa -xa --group-directories-first"
 alias ll="exa -al --group-directories-first"
 alias zshrc="vim ~/.zshrc"
@@ -121,3 +122,13 @@ export PATH="$PATH:$HOME/.rvm/bin"
 
 # added by travis gem
 [ ! -s /Users/jordanmilford/.travis/travis.sh ] || source /Users/jordanmilford/.travis/travis.sh
+
+# comment elasticsearch spec helper
+function comment_es() {
+  sed -i '' '163 s/^/#/' spec/spec_helper.rb; sed -i '' '171 s/^/#/' spec/spec_helper.rb
+}
+
+# uncomment elasticsearch spec helper
+function uncomment_es() {
+  sed -i '' '163 s/^##*//' spec/spec_helper.rb; sed -i '' '171 s/^##*//' spec/spec_helper.rb
+}
