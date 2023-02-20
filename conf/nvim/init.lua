@@ -30,17 +30,49 @@ require('packer').startup(function(use)
   --
   use 'psliwka/vim-smoothie' -- Smooth scrolling
   use 'dracula/vim' -- Dracula theme
+  use { "catppuccin/nvim", as = "catppuccin" } -- Catppuccin theme
   use 'kyazdani42/nvim-web-devicons' -- File type icons
   use 'romgrk/barbar.nvim' -- Add buffer bar
   use 'nvim-lualine/lualine.nvim' -- Fancier statusline
   use 'lukas-reineke/indent-blankline.nvim' -- Add indentation guides even on blank lines
   use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' } } -- Add git related info in the signs columns and popups
   use {
-    "startup-nvim/startup.nvim",
-    requires = {"nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim"},
+    'glepnir/dashboard-nvim',
+    event = 'VimEnter',
     config = function()
-      require"startup".setup({ theme = 'startify' })
-    end
+      require('dashboard').setup {
+        theme = 'hyper',
+        config = {
+          week_header = {
+            enable = true,
+          },
+          shortcut = {
+            { desc = ' Update', group = '@property', action = 'Lazy update', key = 'u' },
+            {
+              icon = ' ',
+              icon_hl = '@variable',
+              desc = 'Files',
+              group = 'Label',
+              action = 'Telescope find_files',
+              key = 'f',
+            },
+            {
+              desc = ' Apps',
+              group = 'DiagnosticHint',
+              action = 'Telescope app',
+              key = 'a',
+            },
+            {
+              desc = ' dotfiles',
+              group = 'Number',
+              action = 'Telescope dotfiles',
+              key = 'd',
+            },
+          },
+        },
+      }
+    end,
+    requires = {'nvim-tree/nvim-web-devicons'}
   }
   use 'nvim-treesitter/nvim-treesitter' -- Highlight, edit, and navigate code using a fast incremental parsing library
   use 'nvim-treesitter/nvim-treesitter-textobjects' -- Additional textobjects for treesitter
@@ -84,8 +116,25 @@ vim.o.updatetime = 250
 vim.wo.signcolumn = 'yes'
 
 -- Set colorscheme
-vim.cmd [[colorscheme dracula]]
-vim.o.termguicolors = true
+require("catppuccin").setup {
+    custom_highlights = function(colors)
+        return {
+          Comment = { fg = colors.surface2 },
+          ["@constant.builtin"] = { fg = colors.surface2, style = {} },
+          ["@comment"] = { fg = colors.surface2, style = { "italic" } },
+        }
+    end,
+   integrations = {
+      nvimtree = true,
+      telescope = true,
+      treesitter = true,
+      barbar = true,
+      gitsigns = true,
+      cmp = true
+      -- For more plugins integrations please scroll down (https://github.com/catppuccin/nvim#integrations)
+  },
+}
+vim.cmd.colorscheme "catppuccin-macchiato"
 
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
@@ -100,7 +149,7 @@ vim.api.nvim_set_option('expandtab', true)
 require('lualine').setup {
   options = {
     icons_enabled = false,
-    theme = 'onedark',
+    theme = "catppuccin",
     component_separators = '|',
     section_separators = '',
   },
@@ -171,14 +220,14 @@ vim.api.nvim_set_keymap('n', '-', ':NvimTreeFindFile<CR>', keymapSilentNore)
 
 -- Configure barbar.nvim
 vim.g.bufferline = {
-  closable = false,
-  icons = false
+  closable = false
 }
 
 -- barbar.nvim keymaps
 vim.api.nvim_set_keymap('n', 'K', ':BufferNext<CR>', keymapSilentNore)
 vim.api.nvim_set_keymap('n', 'J', ':BufferPrevious<CR>', keymapSilentNore)
 vim.api.nvim_set_keymap('n', '<leader>x', ':BufferClose<CR>', keymapSilentNore)
+vim.api.nvim_set_keymap('n', '<leader>bl', ':BufferOrderByLanguage<CR>', keymapSilentNore)
 
 -- vim-test keymaps
 vim.api.nvim_set_keymap('n', '<leader>tf', ':TestFile<CR>', keymapSilentNore)
@@ -252,6 +301,7 @@ require('nvim-treesitter.configs').setup {
   highlight = {
     enable = true, -- false will disable the whole extension
   },
+  ensure_installed = { 'glimmer' },
   incremental_selection = {
     enable = true,
     keymaps = {
@@ -350,7 +400,7 @@ lspconfig.ember.setup {
 lspconfig.cssmodules_ls.setup {
     on_attach = function (client)
         -- avoid accepting `go-to-definition` responses from this LSP
-        client.resolved_capabilities.goto_definition = false
+        client.server_capabilities.definitionProvider = false
     end,
 }
 
