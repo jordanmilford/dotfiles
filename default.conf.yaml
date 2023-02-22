@@ -8,3 +8,6 @@
       path: conf/zsh/.zshrc
       force: true
       create: true
+    ~/.tmux.conf:
+      path: conf/tmux/.tmux.conf
+      create: true

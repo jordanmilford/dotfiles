@@ -94,6 +94,7 @@ alias f="rg -F"
 alias ls="exa -xa --group-directories-first"
 alias ll="exa -al --group-directories-first"
 alias zshrc="vim ~/.zshrc"
+alias tmuxrc="vim ~/.tmux.conf"
 alias vimrc="vim ~/.config/nvim/init.lua"
 
 # Base16 Shell
