@@ -223,6 +223,8 @@ vim.g.bufferline = {
   closable = false
 }
 
+vim.o.cmdheight = 0
+
 -- barbar.nvim keymaps
 vim.api.nvim_set_keymap('n', 'K', ':BufferNext<CR>', keymapSilentNore)
 vim.api.nvim_set_keymap('n', 'J', ':BufferPrevious<CR>', keymapSilentNore)
