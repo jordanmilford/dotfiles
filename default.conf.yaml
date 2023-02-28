@@ -4,6 +4,12 @@
     ~/.config/nvim/init.lua:
       path: conf/nvim/init.lua
       create: true
+    ~/.config/pgcli:
+      path: conf/pgcli
+      create: true
+    ~/.config/lazygit:
+      path: conf/lazygit
+      create: true
     ~/.zshrc:
       path: conf/zsh/.zshrc
       force: true
