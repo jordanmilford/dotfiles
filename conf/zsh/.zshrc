@@ -5,6 +5,9 @@ export PATH=$HOME/bin:/usr/local/bin:/usr/local/include:~/Library/Python/3.7/bin
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
 
+export XDG_CONFIG_HOME="$HOME/.config"
+export DISABLE_AUTO_TITLE='true'
+
 ZSH_THEME="af-magic"
 
 # Uncomment the following line to use case-sensitive completion.
