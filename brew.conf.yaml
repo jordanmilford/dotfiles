@@ -16,3 +16,8 @@
   - nvm
   - ripgrep
   - wget
+  - lazygit
+  - tmux
+  - tmuxp
+  - git-delta
+  - bat
