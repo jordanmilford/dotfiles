@@ -19,11 +19,14 @@ require('packer').startup(function(use)
   use 'f-person/git-blame.nvim' -- Git blame viewer
   use 'tpope/vim-rhubarb' -- Fugitive-companion to interact with github
   use 'tpope/vim-surround' -- Surrounding manipulation
+  use 'windwp/nvim-ts-autotag' -- Treesitter HTML tag plugin
   use 'tpope/vim-repeat' -- . repeat support for vim-surround
-  use 'jeffkreeftmeijer/vim-numbertoggle' -- Hybrid line numbering
   use 'numToStr/Comment.nvim' -- Comment/uncomment utility
   use 'kyazdani42/nvim-tree.lua' -- Directory and file browsing utility
-  use 'steelsojka/pears.nvim' -- Auto-insert closing symbol for pairs
+  use {
+    "windwp/nvim-autopairs",
+    config = function() require("nvim-autopairs").setup {} end
+  }
   -- UI to select things (files, grep results, open buffers...)
   use { 'nvim-telescope/telescope.nvim', requires = { 'nvim-lua/plenary.nvim' } }
   use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
@@ -77,11 +80,31 @@ require('packer').startup(function(use)
   use 'nvim-treesitter/nvim-treesitter' -- Highlight, edit, and navigate code using a fast incremental parsing library
   use 'nvim-treesitter/nvim-treesitter-textobjects' -- Additional textobjects for treesitter
   use 'neovim/nvim-lspconfig' -- Collection of configurations for built-in LSP client
+  use 'onsails/lspkind.nvim' -- nerd icons in cmp
+  use {
+    "zbirenbaum/copilot.lua",
+    cmd = "Copilot",
+    event = "InsertEnter",
+    config = function()
+      require("copilot").setup({
+        copilot_node_command = "/Users/jordanmilford/.nvm/versions/node/v18.15.0/bin/node", -- Node.js version must be > 16.x
+        suggestion = { enabled = false },
+        panel = { enabled = false },
+      })
+    end
+  }
   use 'hrsh7th/nvim-cmp' -- Autocompletion plugin
   use 'hrsh7th/cmp-nvim-lsp'
   use 'saadparwaiz1/cmp_luasnip'
   use 'L3MON4D3/LuaSnip' -- Snippets plugin
   use 'rafamadriz/friendly-snippets' -- vscode format snippets
+  use {
+    "zbirenbaum/copilot-cmp",
+    after = { "copilot.lua" },
+    config = function ()
+      require("copilot_cmp").setup()
+    end
+  }
   use 'gpanders/editorconfig.nvim' -- EditorConfig support
   use 'joukevandermaas/vim-ember-hbs' -- Ember.js HBS highlighting
   use 'vim-test/vim-test' -- Run tests from nvim
@@ -162,9 +185,6 @@ vim.g.maplocalleader = ','
 
 -- Enable Comment.nvim
 require('Comment').setup()
-
--- Enable pears.nvim
-require('pears').setup()
 
 -- Enable nvim-tree
 require('nvim-tree').setup({
@@ -247,12 +267,16 @@ vim.o.cmdheight = 0
 vim.api.nvim_set_keymap('n', 'K', ':BufferNext<CR>', keymapSilentNore)
 vim.api.nvim_set_keymap('n', 'J', ':BufferPrevious<CR>', keymapSilentNore)
 vim.api.nvim_set_keymap('n', '<leader>x', ':BufferClose<CR>', keymapSilentNore)
+vim.api.nvim_set_keymap('n', '<leader>X', ':BufferCloseAllButCurrent<CR>', keymapSilentNore)
 vim.api.nvim_set_keymap('n', '<leader>bl', ':BufferOrderByLanguage<CR>', keymapSilentNore)
 
 -- vim-test keymaps
 vim.api.nvim_set_keymap('n', '<leader>tf', ':TestFile<CR>', keymapSilentNore)
 vim.api.nvim_set_keymap('n', '<leader>tn', ':TestNearest<CR>', keymapSilentNore)
 vim.g['test#ruby#rspec#options'] = { all = '--format documentation' }
+
+-- Rails keymaps
+vim.api.nvim_set_keymap('n', '<leader>rr', ':!bundle exec rails r %:p<CR>', keymapSilentNore)
 
 -- Remap for dealing with word wrap
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
@@ -273,6 +297,9 @@ vim.g.indent_blankline_char = '┊'
 vim.g.indent_blankline_filetype_exclude = { 'help', 'packer' }
 vim.g.indent_blankline_buftype_exclude = { 'terminal', 'nofile' }
 vim.g.indent_blankline_show_trailing_blankline_indent = false
+
+-- Copilot
+-- vim.g.copilot_node_command = "/Users/jordanmilford/.nvm/versions/node/v18.15.0/bin/node"
 
 -- Gitsigns
 require('gitsigns').setup {
@@ -322,6 +349,9 @@ require('nvim-treesitter.configs').setup {
     enable = true, -- false will disable the whole extension
   },
   ensure_installed = { 'glimmer' },
+  autotag = {
+    enable = true,
+  },
   incremental_selection = {
     enable = true,
     keymaps = {
@@ -380,6 +410,7 @@ local lspconfig = require 'lspconfig'
 local on_attach = function(_, bufnr)
   local opts = { buffer = bufnr }
   vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
+  vim.keymap.set('n', '<leader>a', vim.lsp.buf.code_action, opts)
   vim.keymap.set('n', '<leader>g', vim.lsp.buf.definition, opts)
   vim.keymap.set('n', '<leader>t', vim.lsp.buf.hover, opts)
   vim.keymap.set('n', '<leader>i', vim.lsp.buf.implementation, opts)
@@ -461,8 +492,12 @@ lspconfig.lua_ls.setup {
 local luasnip = require 'luasnip'
 require("luasnip.loaders.from_vscode").lazy_load()
 
+
 -- nvim-cmp setup
 local cmp = require 'cmp'
+local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+local lspkind = require('lspkind')
+
 cmp.setup {
   snippet = {
     expand = function(args)
@@ -496,10 +531,29 @@ cmp.setup {
       end
     end,
   }),
+  formatting = {
+    format = lspkind.cmp_format({
+      mode = 'symbol', -- show only symbol annotations
+      maxwidth = 50, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
+      ellipsis_char = '...', -- when popup menu exceed maxwidth, the truncated part would show ellipsis_char instead (must define maxwidth first)
+
+      -- The function below will be called before any actual modifications from lspkind
+      -- so that you can provide more controls on popup customization. (See [#30](https://github.com/onsails/lspkind-nvim/pull/30))
+      before = function (entry, vim_item)
+        return vim_item
+      end
+    })
+  },
   sources = {
+    { name = "copilot", group_index = 2 },
     { name = 'nvim_lsp' },
     { name = 'luasnip' },
-  },
+  }
 }
+
+cmp.event:on(
+  'confirm_done',
+  cmp_autopairs.on_confirm_done()
+)
 
 -- vim: ts=2 sts=2 sw=2 et
