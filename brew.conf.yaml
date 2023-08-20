@@ -21,3 +21,5 @@
   - tmuxp
   - git-delta
   - bat
+  - gnupg
+  - dopplerhq/cli/doppler
