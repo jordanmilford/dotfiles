@@ -1,0 +1,14 @@
+session_name: 🏠 Home
+start_directory: ~/
+windows:
+  - window_name: "~"
+    panes:
+      -
+  - window_name: dotfiles
+    start_directory: ~/Documents/Github/dotfiles
+    panes:
+      - vim .
+      - lazygit --use-config-file="/Users/jordanmilford/.config/lazygit/config.yml"
+  - window_name: "btop"
+    panes:
+      - btop
