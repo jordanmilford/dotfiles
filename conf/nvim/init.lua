@@ -39,6 +39,71 @@ require('packer').startup(function(use)
   use 'nvim-lualine/lualine.nvim' -- Fancier statusline
   use 'lukas-reineke/indent-blankline.nvim' -- Add indentation guides even on blank lines
   use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' } } -- Add git related info in the signs columns and popups
+  use({
+    "Pocco81/true-zen.nvim",
+    config = function()
+      require("true-zen").setup {
+        modes = { -- configurations per mode
+          ataraxis = {
+            shade = "dark", -- if `dark` then dim the padding windows, otherwise if it's `light` it'll brighten said windows
+            backdrop = 0, -- percentage by which padding windows should be dimmed/brightened. Must be a number between 0 and 1. Set to 0 to keep the same background color
+            minimum_writing_area = { -- minimum size of main window
+              width = 120,
+              height = 44,
+            },
+            quit_untoggles = true, -- type :q or :qa to quit Ataraxis mode
+            padding = { -- padding windows
+              left = 44,
+              right = 44,
+              top = 0,
+              bottom = 0,
+            },
+          },
+          minimalist = {
+            ignored_buf_types = { "nofile" }, -- save current options from any window except ones displaying these kinds of buffers
+            options = { -- options to be disabled when entering Minimalist mode
+              number = false,
+              relativenumber = false,
+              showtabline = 0,
+              signcolumn = "no",
+              statusline = "",
+              cmdheight = 1,
+              laststatus = 0,
+              showcmd = false,
+              showmode = false,
+              ruler = false,
+              numberwidth = 1
+            },
+          },
+          narrow = {
+            --- change the style of the fold lines. Set it to:
+            --- `informative`: to get nice pre-baked folds
+            --- `invisible`: hide them
+            --- function() end: pass a custom func with your fold lines. See :h foldtext
+            folds_style = "invisible",
+            run_ataraxis = true, -- display narrowed text in a Ataraxis session
+          },
+          focus = {
+            callbacks = { -- run functions when opening/closing Focus mode
+              open_pre = nil,
+              open_pos = nil,
+              close_pre = nil,
+              close_pos = nil
+            },
+          }
+        },
+        integrations = {
+          tmux = true, -- hide tmux status bar in (minimalist, ataraxis)
+          kitty = { -- increment font size in Kitty. Note: you must set `allow_remote_control socket-only` and `listen_on unix:/tmp/kitty` in your personal config (ataraxis)
+            enabled = false,
+            font = "+3"
+          },
+          twilight = false, -- enable twilight (ataraxis)
+          lualine = true -- hide nvim-lualine (ataraxis)
+        },
+      }
+    end,
+  })
   use {
     'glepnir/dashboard-nvim',
     event = 'VimEnter',
@@ -102,7 +167,9 @@ require('packer').startup(function(use)
     "zbirenbaum/copilot-cmp",
     after = { "copilot.lua" },
     config = function ()
-      require("copilot_cmp").setup()
+      require("copilot_cmp").setup({
+        suggestion= { auto_trigger = true }
+      })
     end
   }
   use 'gpanders/editorconfig.nvim' -- EditorConfig support
@@ -114,6 +181,9 @@ local keymapSilentNore = { noremap = true, silent = true }
 
 --Set highlight on search
 vim.o.hlsearch = false
+
+--Use system clipboard
+vim.opt.clipboard = 'unnamedplus'
 
 --Make line numbers default
 vim.wo.number = true
@@ -257,11 +327,19 @@ end
 vim.api.nvim_create_autocmd({ "VimEnter" }, { callback = open_nvim_tree })
 
 -- Configure barbar.nvim
-vim.g.bufferline = {
-  closable = false
-}
+-- TODO: fix deprecation warning
+-- vim.g.bufferline = {
+--   closable = false
+-- }
 
 vim.o.cmdheight = 0
+
+-- true zen
+vim.api.nvim_set_keymap("n", "<leader>zn", ":TZNarrow<CR>", {})
+vim.api.nvim_set_keymap("v", "<leader>zn", ":'<,'>TZNarrow<CR>", {})
+vim.api.nvim_set_keymap("n", "<leader>zf", ":TZFocus<CR>", {})
+vim.api.nvim_set_keymap("n", "<leader>zm", ":TZMinimalist<CR>", {})
+vim.api.nvim_set_keymap("n", "<leader>za", ":TZAtaraxis<CR>", {})
 
 -- barbar.nvim keymaps
 vim.api.nvim_set_keymap('n', 'K', ':BufferNext<CR>', keymapSilentNore)
@@ -274,6 +352,7 @@ vim.api.nvim_set_keymap('n', '<leader>bl', ':BufferOrderByLanguage<CR>', keymapS
 vim.api.nvim_set_keymap('n', '<leader>tf', ':TestFile<CR>', keymapSilentNore)
 vim.api.nvim_set_keymap('n', '<leader>tn', ':TestNearest<CR>', keymapSilentNore)
 vim.g['test#ruby#rspec#options'] = { all = '--format documentation' }
+vim.g['test#ruby#rspec#executable'] = 'doppler run -- bundle exec rspec'
 
 -- Rails keymaps
 vim.api.nvim_set_keymap('n', '<leader>rr', ':!bundle exec rails r %:p<CR>', keymapSilentNore)
@@ -293,13 +372,35 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 })
 
 -- Map blankline
-vim.g.indent_blankline_char = '┊'
-vim.g.indent_blankline_filetype_exclude = { 'help', 'packer' }
-vim.g.indent_blankline_buftype_exclude = { 'terminal', 'nofile' }
-vim.g.indent_blankline_show_trailing_blankline_indent = false
+-- vim.g.indent_blankline_char = '┊'
+-- vim.g.indent_blankline_filetype_exclude = { 'help', 'packer', 'txt' }
+-- vim.g.indent_blankline_buftype_exclude = { 'terminal', 'nofile' }
+-- vim.g.indent_blankline_show_trailing_blankline_indent = false
 
--- Copilot
--- vim.g.copilot_node_command = "/Users/jordanmilford/.nvm/versions/node/v18.15.0/bin/node"
+-- indent-blankline
+-- vim.opt.termguicolors = true
+-- vim.cmd [[highlight IndentBlanklineIndent1 guifg=#E06C75 gui=nocombine]]
+-- vim.cmd [[highlight IndentBlanklineIndent2 guifg=#E5C07B gui=nocombine]]
+-- vim.cmd [[highlight IndentBlanklineIndent3 guifg=#98C379 gui=nocombine]]
+-- vim.cmd [[highlight IndentBlanklineIndent4 guifg=#56B6C2 gui=nocombine]]
+-- vim.cmd [[highlight IndentBlanklineIndent5 guifg=#61AFEF gui=nocombine]]
+-- vim.cmd [[highlight IndentBlanklineIndent6 guifg=#C678DD gui=nocombine]]
+--
+-- vim.opt.list = true
+-- vim.opt.listchars:append "space:⋅"
+-- vim.opt.listchars:append "eol:↴"
+
+-- require("indent_blankline").setup {
+--     space_char_blankline = " ",
+--     char_highlight_list = {
+--         "IndentBlanklineIndent1",
+--         "IndentBlanklineIndent2",
+--         "IndentBlanklineIndent3",
+--         "IndentBlanklineIndent4",
+--         "IndentBlanklineIndent5",
+--         "IndentBlanklineIndent6",
+--     },
+-- }
 
 -- Gitsigns
 require('gitsigns').setup {
