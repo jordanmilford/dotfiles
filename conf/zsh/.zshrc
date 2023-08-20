@@ -14,6 +14,7 @@ source ${ZIM_HOME}/init.zsh
 # export GEM_HOME="$(ruby -e 'puts Gem.user_dir')"
 # If you come from bash you might have to change your $PATH.
 export PATH=$HOME/bin:/usr/local/bin:/usr/local/include:~/Library/Python/3.7/bin:$PATH
+export PATH="/Users/jordanmilford/apps/elasticsearch/bin:$PATH"
 
 # Path to your oh-my-zsh installation.
 # export ZSH=$HOME/.oh-my-zsh
@@ -154,3 +155,7 @@ function uncomment_es() {
 
 
 eval "$(starship init zsh)"
+
+HISTFILE=~/.zsh_history
+HISTSIZE=999999999
+SAVEHIST=$HISTSIZE
