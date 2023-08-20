@@ -1,0 +1,8 @@
+zmodule prompt-pwd
+zmodule mfaerevaag/wd -s 'wd.plugin.zsh'
+zmodule zsh-users/zsh-syntax-highlighting
+zmodule zsh-users/zsh-autosuggestions
+zmodule zsh-users/zsh-completions --fpath src
+zmodule completion
+
+zstyle ':zim:prompt-pwd' git-root yes
