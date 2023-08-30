@@ -146,29 +146,41 @@ require('packer').startup(function(use)
   use 'nvim-treesitter/nvim-treesitter-textobjects' -- Additional textobjects for treesitter
   use 'neovim/nvim-lspconfig' -- Collection of configurations for built-in LSP client
   use 'onsails/lspkind.nvim' -- nerd icons in cmp
-  use {
-    "zbirenbaum/copilot.lua",
-    cmd = "Copilot",
-    event = "InsertEnter",
-    config = function()
-      require("copilot").setup({
-        copilot_node_command = "/Users/jordanmilford/.nvm/versions/node/v18.15.0/bin/node", -- Node.js version must be > 16.x
-        suggestion = { enabled = false },
-        panel = { enabled = false },
-      })
-    end
-  }
   use 'hrsh7th/nvim-cmp' -- Autocompletion plugin
   use 'hrsh7th/cmp-nvim-lsp'
   use 'saadparwaiz1/cmp_luasnip'
   use 'L3MON4D3/LuaSnip' -- Snippets plugin
   use 'rafamadriz/friendly-snippets' -- vscode format snippets
   use {
+    "zbirenbaum/copilot.lua",
+    cmd = "Copilot",
+    event = "InsertEnter",
+    config = function()
+      require("copilot").setup({
+        copilot_node_command = os.getenv('HOME') .. "/.nvm/versions/node/v18.15.0/bin/node", -- Node.js version must be > 16.x
+        suggestion = { enabled = false },
+        panel = { enabled = false },
+      })
+    end
+  }
+  use {
     "zbirenbaum/copilot-cmp",
     after = { "copilot.lua" },
     config = function ()
       require("copilot_cmp").setup({
-        suggestion= { auto_trigger = true }
+        suggestion = { auto_trigger = true }
+      })
+    end
+  }
+  use {
+    "zbirenbaum/copilot.lua",
+    cmd = "Copilot",
+    event = "InsertEnter",
+    config = function()
+      require("copilot").setup({
+        copilot_node_command = os.getenv('HOME') .. "/.nvm/versions/node/v18.15.0/bin/node", -- Node.js version must be > 16.x
+        suggestion = { enabled = false },
+        panel = { enabled = false },
       })
     end
   }
@@ -580,6 +592,7 @@ lspconfig.lua_ls.setup {
       workspace = {
         -- Make the server aware of Neovim runtime files
         library = vim.api.nvim_get_runtime_file('', true),
+        checkThirdParty = false,
       },
       -- Do not send telemetry data containing a randomized but unique identifier
       telemetry = {
