@@ -3,43 +3,45 @@
     and has been modified by me, https://github.com/jordanmilford
 --]]
 
--- Install packer
-local install_path = vim.fn.stdpath 'data' .. '/site/pack/packer/start/packer.nvim'
-
-if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
-  vim.fn.execute('!git clone https://github.com/wbthomason/packer.nvim ' .. install_path)
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", -- latest stable release
+    lazypath,
+  })
 end
+vim.opt.rtp:prepend(lazypath)
 
-local packer_group = vim.api.nvim_create_augroup('Packer', { clear = true })
-vim.api.nvim_create_autocmd('BufWritePost', { command = 'source <afile> | PackerCompile', group = packer_group, pattern = 'init.lua' })
-
-require('packer').startup(function(use)
-  use 'wbthomason/packer.nvim' -- Package manager
-  use 'tpope/vim-fugitive' -- Git commands in nvim
-  use 'f-person/git-blame.nvim' -- Git blame viewer
-  use 'tpope/vim-rhubarb' -- Fugitive-companion to interact with github
-  use 'tpope/vim-surround' -- Surrounding manipulation
-  use 'windwp/nvim-ts-autotag' -- Treesitter HTML tag plugin
-  use 'tpope/vim-repeat' -- . repeat support for vim-surround
-  use 'numToStr/Comment.nvim' -- Comment/uncomment utility
-  use 'kyazdani42/nvim-tree.lua' -- Directory and file browsing utility
-  use {
+require("lazy").setup({
+  'wbthomason/packer.nvim', -- Package manager
+  'tpope/vim-fugitive', -- Git commands in nvim
+  'f-person/git-blame.nvim', -- Git blame viewer
+  'tpope/vim-rhubarb', -- Fugitive-companion to interact with github
+  'tpope/vim-surround', -- Surrounding manipulation
+  'windwp/nvim-ts-autotag', -- Treesitter HTML tag plugin
+  'tpope/vim-repeat', -- . repeat support for vim-surround
+  'numToStr/Comment.nvim', -- Comment/uncomment utility
+  'kyazdani42/nvim-tree.lua', -- Directory and file browsing utility
+  {
     "windwp/nvim-autopairs",
     config = function() require("nvim-autopairs").setup {} end
-  }
+  },
   -- UI to select things (files, grep results, open buffers...)
-  use { 'nvim-telescope/telescope.nvim', requires = { 'nvim-lua/plenary.nvim' } }
-  use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
-  --
-  use 'psliwka/vim-smoothie' -- Smooth scrolling
-  use 'dracula/vim' -- Dracula theme
-  use { "catppuccin/nvim", as = "catppuccin" } -- Catppuccin theme
-  use 'kyazdani42/nvim-web-devicons' -- File type icons
-  use 'romgrk/barbar.nvim' -- Add buffer bar
-  use 'nvim-lualine/lualine.nvim' -- Fancier statusline
-  use 'lukas-reineke/indent-blankline.nvim' -- Add indentation guides even on blank lines
-  use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' } } -- Add git related info in the signs columns and popups
-  use({
+  { 'nvim-telescope/telescope.nvim', dependencies = { 'nvim-lua/plenary.nvim' } },
+  { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
+  'psliwka/vim-smoothie', -- Smooth scrolling
+  'dracula/vim', -- Dracula theme
+  { "catppuccin/nvim", name = "catppuccin" }, -- Catppuccin theme
+  'kyazdani42/nvim-web-devicons', -- File type icons
+  'romgrk/barbar.nvim', -- Add buffer bar
+  'nvim-lualine/lualine.nvim', -- Fancier statusline
+  'lukas-reineke/indent-blankline.nvim', -- Add indentation guides even on blank lines
+  { 'lewis6991/gitsigns.nvim', dependencies = { 'nvim-lua/plenary.nvim' } }, -- Add git related info in the signs columns and popups
+  {
     "Pocco81/true-zen.nvim",
     config = function()
       require("true-zen").setup {
@@ -103,8 +105,8 @@ require('packer').startup(function(use)
         },
       }
     end,
-  })
-  use {
+  },
+  {
     'glepnir/dashboard-nvim',
     event = 'VimEnter',
     config = function()
@@ -140,18 +142,18 @@ require('packer').startup(function(use)
         },
       }
     end,
-    requires = {'nvim-tree/nvim-web-devicons'}
-  }
-  use 'nvim-treesitter/nvim-treesitter' -- Highlight, edit, and navigate code using a fast incremental parsing library
-  use 'nvim-treesitter/nvim-treesitter-textobjects' -- Additional textobjects for treesitter
-  use 'neovim/nvim-lspconfig' -- Collection of configurations for built-in LSP client
-  use 'onsails/lspkind.nvim' -- nerd icons in cmp
-  use 'hrsh7th/nvim-cmp' -- Autocompletion plugin
-  use 'hrsh7th/cmp-nvim-lsp'
-  use 'saadparwaiz1/cmp_luasnip'
-  use 'L3MON4D3/LuaSnip' -- Snippets plugin
-  use 'rafamadriz/friendly-snippets' -- vscode format snippets
-  use {
+    dependencies = {'nvim-tree/nvim-web-devicons'}
+  },
+  'nvim-treesitter/nvim-treesitter', -- Highlight, edit, and navigate code using a fast incremental parsing library
+  'nvim-treesitter/nvim-treesitter-textobjects', -- Additional textobjects for treesitter
+  'neovim/nvim-lspconfig', -- Collection of configurations for built-in LSP client
+  'onsails/lspkind.nvim', -- nerd icons in cmp
+  'hrsh7th/nvim-cmp', -- Autocompletion plugin
+  'hrsh7th/cmp-nvim-lsp',
+  'saadparwaiz1/cmp_luasnip',
+  'L3MON4D3/LuaSnip', -- Snippets plugin
+  'rafamadriz/friendly-snippets', -- vscode format snippets
+  {
     "zbirenbaum/copilot.lua",
     cmd = "Copilot",
     event = "InsertEnter",
@@ -162,8 +164,8 @@ require('packer').startup(function(use)
         panel = { enabled = false },
       })
     end
-  }
-  use {
+  },
+  {
     "zbirenbaum/copilot-cmp",
     after = { "copilot.lua" },
     config = function ()
@@ -171,8 +173,8 @@ require('packer').startup(function(use)
         suggestion = { auto_trigger = true }
       })
     end
-  }
-  use {
+  },
+  {
     "zbirenbaum/copilot.lua",
     cmd = "Copilot",
     event = "InsertEnter",
@@ -183,11 +185,11 @@ require('packer').startup(function(use)
         panel = { enabled = false },
       })
     end
-  }
-  use 'gpanders/editorconfig.nvim' -- EditorConfig support
-  use 'joukevandermaas/vim-ember-hbs' -- Ember.js HBS highlighting
-  use 'vim-test/vim-test' -- Run tests from nvim
-end)
+  },
+  'gpanders/editorconfig.nvim', -- EditorConfig support
+  'joukevandermaas/vim-ember-hbs', -- Ember.js HBS highlighting
+  'vim-test/vim-test', -- Run tests from nvim
+})
 
 local keymapSilentNore = { noremap = true, silent = true }
 
