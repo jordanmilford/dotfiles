@@ -1,0 +1,2 @@
+- shell:
+  - [npm i -g eslint cssmodules-language-server prettier sass-lint stylelint testem typescript typescript-language-server vscode-langservers-extracted]
