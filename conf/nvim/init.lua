@@ -17,7 +17,6 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
-  'wbthomason/packer.nvim', -- Package manager
   'tpope/vim-fugitive', -- Git commands in nvim
   'f-person/git-blame.nvim', -- Git blame viewer
   'tpope/vim-rhubarb', -- Fugitive-companion to interact with github
@@ -142,7 +141,6 @@ require("lazy").setup({
         },
       }
     end,
-    dependencies = {'nvim-tree/nvim-web-devicons'}
   },
   'nvim-treesitter/nvim-treesitter', -- Highlight, edit, and navigate code using a fast incremental parsing library
   'nvim-treesitter/nvim-treesitter-textobjects', -- Additional textobjects for treesitter
@@ -167,7 +165,7 @@ require("lazy").setup({
   },
   {
     "zbirenbaum/copilot-cmp",
-    after = { "copilot.lua" },
+    dependencies = { "copilot.lua" },
     config = function ()
       require("copilot_cmp").setup({
         suggestion = { auto_trigger = true }
