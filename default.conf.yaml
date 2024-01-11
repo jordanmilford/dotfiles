@@ -4,6 +4,9 @@
     ~/.config/nvim/init.lua:
       path: conf/nvim/init.lua
       create: true
+    ~/.config/nvim/lazy-lock.json:
+      path: conf/nvim/lazy-lock.json
+      create: true
     ~/.config/pgcli:
       path: conf/pgcli
       create: true
