@@ -191,6 +191,7 @@ require("lazy").setup({
   },
   'gpanders/editorconfig.nvim', -- EditorConfig support
   'joukevandermaas/vim-ember-hbs', -- Ember.js HBS highlighting
+  'jidn/vim-dbml', -- DBML syntax highlighting
   'vim-test/vim-test', -- Run tests from nvim
 })
 
