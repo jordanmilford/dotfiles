@@ -5,7 +5,6 @@
 - brew:
   - docker
   - docker-compose
-  - exa
   - gh
   - git
   - git-lfs
