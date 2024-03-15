@@ -197,7 +197,7 @@ require("lazy").setup({
 local keymapSilentNore = { noremap = true, silent = true }
 
 --Set highlight on search
-vim.o.hlsearch = false
+vim.o.hlsearch = true
 
 --Use system clipboard
 vim.opt.clipboard = 'unnamedplus'
