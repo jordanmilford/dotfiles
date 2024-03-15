@@ -447,7 +447,6 @@ require('telescope').setup {
 require('telescope').load_extension 'fzf'
 
 -- Add telescope leader shortcuts
-vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers)
 vim.keymap.set('n', '<leader>f', function()
   require('telescope.builtin').find_files { previewer = false }
 end)
@@ -456,6 +455,21 @@ vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags)
 vim.keymap.set('n', '<leader>st', require('telescope.builtin').tags)
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').grep_string)
 vim.keymap.set('n', '<leader>sp', require('telescope.builtin').live_grep)
+vim.keymap.set('n', '<leader>b', function()
+  require('telescope.builtin').buffers({
+    -- Configuration options go here
+    show_all_buffers = true, -- Show all buffers, including hidden ones
+    sort_lastused = true,    -- Sort buffers by last used
+    ignore_current_buffer = false, -- Do not ignore current buffer
+    sort_mru = true,         -- Sort Most Recently Used buffers first
+    previewer = true,        -- Enable or disable the previewer
+    theme = "dropdown",      -- Use a specific theme (e.g., "dropdown")
+    layout_config = {        -- Customize the layout
+      width = 0.75,          -- Width of the telescope window as a percentage
+      height = 0.5,          -- Height of the telescope window as a percentage
+    },
+  })
+end)
 vim.keymap.set('n', '<leader>so', function()
   require('telescope.builtin').tags { only_current_buffer = true }
 end)
