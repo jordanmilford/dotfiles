@@ -34,7 +34,8 @@ require("lazy").setup({
   { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
   'psliwka/vim-smoothie', -- Smooth scrolling
   'dracula/vim', -- Dracula theme
-  { "catppuccin/nvim", name = "catppuccin" }, -- Catppuccin theme
+  { 'catppuccin/nvim', name = 'catppuccin' }, -- Catppuccin theme
+  { 'rose-pine/neovim', name = 'rose-pine' },
   'kyazdani42/nvim-web-devicons', -- File type icons
   'romgrk/barbar.nvim', -- Add buffer bar
   'nvim-lualine/lualine.nvim', -- Fancier statusline
@@ -243,7 +244,8 @@ require("catppuccin").setup {
       -- For more plugins integrations please scroll down (https://github.com/catppuccin/nvim#integrations)
   },
 }
-vim.cmd.colorscheme "catppuccin-macchiato"
+
+vim.cmd.colorscheme "rose-pine-moon"
 
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
