@@ -1,0 +1,257 @@
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", -- latest stable release
+    lazypath,
+  })
+end
+vim.opt.rtp:prepend(lazypath)
+
+require("lazy").setup({
+  'tpope/vim-fugitive', -- Git commands in nvim
+  'f-person/git-blame.nvim', -- Git blame viewer
+  'tpope/vim-rhubarb', -- Fugitive-companion to interact with github
+  'tpope/vim-surround', -- Surrounding manipulation
+  'windwp/nvim-ts-autotag', -- Treesitter HTML tag plugin
+  'tpope/vim-repeat', -- . repeat support for vim-surround
+  {
+    'numToStr/Comment.nvim', -- Comment/uncomment utility
+    config = function()
+      require('Comment').setup()
+    end
+  },
+  {
+    'Vonr/align.nvim',
+    branch = "v2",
+    lazy = true,
+    init = function()
+      local NS = { noremap = true, silent = true }
+
+      -- Aligns to 1 character
+      vim.keymap.set(
+        'x',
+        'aa',
+        function()
+          require'align'.align_to_char({
+            length = 1,
+          })
+        end,
+        NS
+      )
+    end
+  },
+  'kyazdani42/nvim-tree.lua', -- Directory and file browsing utility
+  {
+    "windwp/nvim-autopairs",
+    config = function() require("nvim-autopairs").setup {} end
+  },
+  -- UI to select things (files, grep results, open buffers...)
+  { 'nvim-telescope/telescope.nvim', dependencies = { 'nvim-lua/plenary.nvim' }, config = function()
+    require('telescope').setup {
+      defaults = {
+        mappings = {
+          i = {
+            ['<C-u>'] = false,
+            ['<C-d>'] = false,
+          },
+        },
+      },
+    }
+    end
+  },
+  { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make', config = function()
+    require('telescope').load_extension 'fzf'-- Enable telescope fzf native
+  end},
+  'psliwka/vim-smoothie', -- Smooth scrolling
+  'dracula/vim', -- Dracula theme
+  { 'catppuccin/nvim', name = 'catppuccin' }, -- Catppuccin theme
+  { 'rose-pine/neovim', name = 'rose-pine' },
+  'kyazdani42/nvim-web-devicons', -- File type icons
+  'romgrk/barbar.nvim', -- Add buffer bar
+  {
+    'nvim-lualine/lualine.nvim',
+    config = function()
+      require('lualine').setup {
+        options = {
+          icons_enabled = false,
+          theme = "catppuccin",
+          component_separators = '|',
+          section_separators = '',
+        },
+      }
+    end
+  }, -- bFancier statusline
+  'lukas-reineke/indent-blankline.nvim', -- Add indentation guides even on blank lines
+  {
+    'lewis6991/gitsigns.nvim',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    config = function()
+      require('gitsigns').setup {
+        signs = {
+          add = { text = '+' },
+          change = { text = '~' },
+          delete = { text = '_' },
+          topdelete = { text = '‾' },
+          changedelete = { text = '~' },
+        },
+      }
+    end
+  }, -- Add git related info in the signs columns and popups
+  {
+    "Pocco81/true-zen.nvim",
+    config = function()
+      require("true-zen").setup {
+        modes = { -- configurations per mode
+          ataraxis = {
+            shade = "dark", -- if `dark` then dim the padding windows, otherwise if it's `light` it'll brighten said windows
+            backdrop = 0, -- percentage by which padding windows should be dimmed/brightened. Must be a number between 0 and 1. Set to 0 to keep the same background color
+            minimum_writing_area = { -- minimum size of main window
+              width = 120,
+              height = 44,
+            },
+            quit_untoggles = true, -- type :q or :qa to quit Ataraxis mode
+            padding = { -- padding windows
+              left = 44,
+              right = 44,
+              top = 0,
+              bottom = 0,
+            },
+          },
+          minimalist = {
+            ignored_buf_types = { "nofile" }, -- save current options from any window except ones displaying these kinds of buffers
+            options = { -- options to be disabled when entering Minimalist mode
+              number = false,
+              relativenumber = false,
+              showtabline = 0,
+              signcolumn = "no",
+              statusline = "",
+              cmdheight = 1,
+              laststatus = 0,
+              showcmd = false,
+              showmode = false,
+              ruler = false,
+              numberwidth = 1
+            },
+          },
+          narrow = {
+            --- change the style of the fold lines. Set it to:
+            --- `informative`: to get nice pre-baked folds
+            --- `invisible`: hide them
+            --- function() end: pass a custom func with your fold lines. See :h foldtext
+            folds_style = "invisible",
+            run_ataraxis = true, -- display narrowed text in a Ataraxis session
+          },
+          focus = {
+            callbacks = { -- run functions when opening/closing Focus mode
+              open_pre = nil,
+              open_pos = nil,
+              close_pre = nil,
+              close_pos = nil
+            },
+          }
+        },
+        integrations = {
+          tmux = true, -- hide tmux status bar in (minimalist, ataraxis)
+          kitty = { -- increment font size in Kitty. Note: you must set `allow_remote_control socket-only` and `listen_on unix:/tmp/kitty` in your personal config (ataraxis)
+            enabled = false,
+            font = "+3"
+          },
+          twilight = false, -- enable twilight (ataraxis)
+          lualine = true -- hide nvim-lualine (ataraxis)
+        },
+      }
+    end,
+  },
+  {
+    'glepnir/dashboard-nvim',
+    event = 'VimEnter',
+    config = function()
+      require('dashboard').setup {
+        theme = 'hyper',
+        config = {
+          week_header = {
+            enable = true,
+          },
+          shortcut = {
+            { desc = ' Update', group = '@property', action = 'Lazy update', key = 'u' },
+            {
+              icon = ' ',
+              icon_hl = '@variable',
+              desc = 'Files',
+              group = 'Label',
+              action = 'Telescope find_files',
+              key = 'f',
+            },
+            {
+              desc = ' Apps',
+              group = 'DiagnosticHint',
+              action = 'Telescope app',
+              key = 'a',
+            },
+            {
+              desc = ' dotfiles',
+              group = 'Number',
+              action = 'Telescope dotfiles',
+              key = 'd',
+            },
+          },
+        },
+      }
+    end,
+  },
+  'nvim-treesitter/nvim-treesitter', -- Highlight, edit, and navigate code using a fast incremental parsing library
+  'nvim-treesitter/nvim-treesitter-textobjects', -- Additional textobjects for treesitter
+  'neovim/nvim-lspconfig', -- Collection of configurations for built-in LSP client
+  'onsails/lspkind.nvim', -- nerd icons in cmp
+  {
+    "hrsh7th/nvim-cmp",
+    event = { "InsertEnter", "CmdlineEnter" },
+    -- Rest of your plugin spec
+  },
+  'hrsh7th/cmp-nvim-lsp',
+  -- 'saadparwaiz1/cmp_luasnip',
+  -- 'L3MON4D3/LuaSnip', -- Snippets plugin
+  'rafamadriz/friendly-snippets', -- vscode format snippets
+  {
+    "zbirenbaum/copilot.lua",
+    cmd = "Copilot",
+    event = "InsertEnter",
+    config = function()
+      require("copilot").setup({
+        copilot_node_command = os.getenv('HOME') .. "/.nvm/versions/node/v18.15.0/bin/node", -- Node.js version must be > 16.x
+        suggestion = { enabled = false },
+        panel = { enabled = false },
+      })
+    end
+  },
+  {
+    "zbirenbaum/copilot-cmp",
+    dependencies = { "copilot.lua" },
+    config = function ()
+      require("copilot_cmp").setup({
+        suggestion = { auto_trigger = true }
+      })
+    end
+  },
+  {
+    "zbirenbaum/copilot.lua",
+    cmd = "Copilot",
+    event = "InsertEnter",
+    config = function()
+      require("copilot").setup({
+        copilot_node_command = os.getenv('HOME') .. "/.nvm/versions/node/v18.15.0/bin/node", -- Node.js version must be > 16.x
+        suggestion = { enabled = false },
+        panel = { enabled = false },
+      })
+    end
+  },
+  'gpanders/editorconfig.nvim', -- EditorConfig support
+  'joukevandermaas/vim-ember-hbs', -- Ember.js HBS highlighting
+  'jidn/vim-dbml', -- DBML syntax highlighting
+  'vim-test/vim-test', -- Run tests from nvim
+})
+
