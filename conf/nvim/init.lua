@@ -24,6 +24,26 @@ require("lazy").setup({
   'windwp/nvim-ts-autotag', -- Treesitter HTML tag plugin
   'tpope/vim-repeat', -- . repeat support for vim-surround
   'numToStr/Comment.nvim', -- Comment/uncomment utility
+  {
+    'Vonr/align.nvim',
+    branch = "v2",
+    lazy = true,
+    init = function()
+      local NS = { noremap = true, silent = true }
+
+      -- Aligns to 1 character
+      vim.keymap.set(
+        'x',
+        'aa',
+        function()
+          require'align'.align_to_char({
+            length = 1,
+          })
+        end,
+        NS
+      )
+    end
+  },
   'kyazdani42/nvim-tree.lua', -- Directory and file browsing utility
   {
     "windwp/nvim-autopairs",
