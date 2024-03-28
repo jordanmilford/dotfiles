@@ -222,7 +222,7 @@ require("lazy").setup({
     event = "InsertEnter",
     config = function()
       require("copilot").setup({
-        copilot_node_command = os.getenv('HOME') .. "/.nvm/versions/node/v18.15.0/bin/node", -- Node.js version must be > 16.x
+        copilot_node_command = 'node', -- Node.js version must be > 16.x
         suggestion = { enabled = false },
         panel = { enabled = false },
       })
@@ -243,7 +243,7 @@ require("lazy").setup({
     event = "InsertEnter",
     config = function()
       require("copilot").setup({
-        copilot_node_command = os.getenv('HOME') .. "/.nvm/versions/node/v18.15.0/bin/node", -- Node.js version must be > 16.x
+        copilot_node_command = 'node', -- Node.js version must be > 16.x
         suggestion = { enabled = false },
         panel = { enabled = false },
       })
