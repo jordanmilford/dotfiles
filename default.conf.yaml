@@ -1,12 +1,11 @@
 - clean: ['~']
 
 - link:
-    ~/.config/nvim/init.lua:
-      path: conf/nvim/init.lua
-      create: true
-    ~/.config/nvim/lazy-lock.json:
-      path: conf/nvim/lazy-lock.json
-      create: true
+    ~/.config/nvim:
+        glob: true
+        path: conf/nvim/
+        create: true
+        force: true
     ~/.config/pgcli:
       path: conf/pgcli
       create: true
