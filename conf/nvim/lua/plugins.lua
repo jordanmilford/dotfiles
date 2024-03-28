@@ -31,7 +31,6 @@ return {
       )
     end
   },
-  'kyazdani42/nvim-tree.lua', -- Directory and file browsing utility
   {
     "windwp/nvim-autopairs",
     config = function() require("nvim-autopairs").setup {} end
