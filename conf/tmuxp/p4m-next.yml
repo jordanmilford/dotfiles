@@ -1,0 +1,15 @@
+session_name: 🎹 p4m-next
+start_directory: ~/GitHub/p4m-next
+windows:
+  - window_name: nvim
+    panes:
+      - vim
+  - window_name: shell
+    panes:
+      - 
+  - window_name: server
+    panes:
+      - yarn dev
+  - window_name: git
+    panes:
+      - lazygit --use-config-file="${HOME}/.config/lazygit/config.yml"
