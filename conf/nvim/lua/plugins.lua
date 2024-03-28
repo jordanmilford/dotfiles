@@ -1,17 +1,4 @@
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system({
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable", -- latest stable release
-    lazypath,
-  })
-end
-vim.opt.rtp:prepend(lazypath)
-
-require("lazy").setup({
+return {
   'tpope/vim-fugitive', -- Git commands in nvim
   'f-person/git-blame.nvim', -- Git blame viewer
   'tpope/vim-rhubarb', -- Fugitive-companion to interact with github
@@ -206,40 +193,8 @@ require("lazy").setup({
   'nvim-treesitter/nvim-treesitter', -- Highlight, edit, and navigate code using a fast incremental parsing library
   'nvim-treesitter/nvim-treesitter-textobjects', -- Additional textobjects for treesitter
   'neovim/nvim-lspconfig', -- Collection of configurations for built-in LSP client
-  'onsails/lspkind.nvim', -- nerd icons in cmp
-  {
-    "hrsh7th/nvim-cmp",
-    event = { "InsertEnter", "CmdlineEnter" },
-    -- Rest of your plugin spec
-  },
-  'hrsh7th/cmp-nvim-lsp',
-  -- 'saadparwaiz1/cmp_luasnip',
-  -- 'L3MON4D3/LuaSnip', -- Snippets plugin
-  'rafamadriz/friendly-snippets', -- vscode format snippets
-  {
-    "zbirenbaum/copilot.lua",
-    cmd = "Copilot",
-    event = "InsertEnter",
-    config = function()
-      require("copilot").setup({
-        copilot_node_command = 'node', -- Node.js version must be > 16.x
-        suggestion = { enabled = false },
-        panel = { enabled = false },
-      })
-    end
-  },
-  {
-    "zbirenbaum/copilot-cmp",
-    dependencies = { "copilot.lua" },
-    config = function ()
-      require("copilot_cmp").setup({
-        suggestion = { auto_trigger = true }
-      })
-    end
-  },
   'gpanders/editorconfig.nvim', -- EditorConfig support
   'joukevandermaas/vim-ember-hbs', -- Ember.js HBS highlighting
   'jidn/vim-dbml', -- DBML syntax highlighting
   'vim-test/vim-test', -- Run tests from nvim
-})
-
+}
