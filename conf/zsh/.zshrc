@@ -106,15 +106,12 @@ bindkey '\er' replace-string
 alias c="clear"
 alias vim="nvim"
 alias vimr="nvim -R"
-alias grep="rg"
 alias f="rg -F"
 alias ls="ls -a"
 alias ll="ls -la"
-alias dr="doppler run --"
 alias zshrc="vim ~/.zshrc"
 alias tmuxrc="vim ~/.tmux.conf"
 alias vimrc="vim ~/.config/nvim/init.lua"
-alias db-backup-fast="pg_restore -L <(pg_restore -l /Users/jordanmilford/Downloads/latest.dump | grep -ivE 'TABLE DATA public (versions|state_transitions)') --verbose --clean --no-acl --no-owner -h localhost -U jordanmilford -d popular_pays_suite_development /Users/jordanmilford/Downloads/latest.dump"
 
 # Base16 Shell
 BASE16_SHELL="$HOME/.config/base16-shell/"
@@ -129,13 +126,6 @@ export PATH="/usr/local/opt/avr-gcc@8/bin:$PATH"
 export NVM_DIR="$HOME/.nvm"
 [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
 [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
-
-# Rbenv
-eval "$(rbenv init -)"
-export PATH="/opt/homebrew/bin:$PATH"
-export PATH="$HOME/.rbenv/bin:$PATH"
-
-eval "$(pyenv init -)"
 
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
 export PATH="$PATH:$HOME/.rvm/bin"
@@ -153,9 +143,12 @@ function uncomment_es() {
   sed -i '' '163 s/^##*//' spec/spec_helper.rb; sed -i '' '171 s/^##*//' spec/spec_helper.rb
 }
 
-
 eval "$(starship init zsh)"
 
 HISTFILE=~/.zsh_history
 HISTSIZE=999999999
 SAVEHIST=$HISTSIZE
+setopt HIST_IGNORE_DUPS     # Ignore duplicated commands history list
+setopt HIST_IGNORE_SPACE
+
+[[ -f ~/.zshrc_ltx ]] && source ~/.zshrc_ltx
