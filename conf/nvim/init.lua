@@ -11,8 +11,8 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+require('vim-core')
 require("lazy").setup('plugins')
-require('core')
 require('colorschemes')
 require('keymaps')
 require('lsp')
