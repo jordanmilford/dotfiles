@@ -2,6 +2,10 @@ return {
   'tpope/vim-fugitive', -- Git commands in nvim
   'f-person/git-blame.nvim', -- Git blame viewer
   'tpope/vim-rhubarb', -- Fugitive-companion to interact with github
+  { 'ruifm/gitlinker.nvim', dependencies = { 'nvim-lua/plenary.nvim' }, config = function()
+    require"gitlinker".setup()
+  end
+  }, -- Open github links
   'tpope/vim-surround', -- Surrounding manipulation
   'windwp/nvim-ts-autotag', -- Treesitter HTML tag plugin
   'tpope/vim-repeat', -- . repeat support for vim-surround
@@ -53,9 +57,6 @@ return {
     require('telescope').load_extension 'fzf'-- Enable telescope fzf native
   end},
   'psliwka/vim-smoothie', -- Smooth scrolling
-  'dracula/vim', -- Dracula theme
-  { 'catppuccin/nvim', name = 'catppuccin' }, -- Catppuccin theme
-  { 'rose-pine/neovim', name = 'rose-pine' },
   'kyazdani42/nvim-web-devicons', -- File type icons
   'romgrk/barbar.nvim', -- Add buffer bar
   {
@@ -64,7 +65,7 @@ return {
       require('lualine').setup {
         options = {
           icons_enabled = false,
-          theme = "catppuccin",
+          -- theme = "catppuccin",
           component_separators = '|',
           section_separators = '',
         },
@@ -189,6 +190,7 @@ return {
       }
     end,
   },
+  'sbdchd/neoformat',  -- Format code
   'nvim-treesitter/nvim-treesitter', -- Highlight, edit, and navigate code using a fast incremental parsing library
   'nvim-treesitter/nvim-treesitter-textobjects', -- Additional textobjects for treesitter
   'neovim/nvim-lspconfig', -- Collection of configurations for built-in LSP client
