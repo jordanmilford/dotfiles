@@ -198,4 +198,9 @@ return {
   'joukevandermaas/vim-ember-hbs', -- Ember.js HBS highlighting
   'jidn/vim-dbml', -- DBML syntax highlighting
   'vim-test/vim-test', -- Run tests from nvim
+  {
+     "m4xshen/hardtime.nvim",
+     dependencies = { "MunifTanjim/nui.nvim", "nvim-lua/plenary.nvim" },
+     opts = {}
+  },
 }
