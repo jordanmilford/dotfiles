@@ -2,7 +2,7 @@
 local lspconfig = require 'lspconfig'
 local on_attach = function(_, bufnr)
   local opts = { buffer = bufnr }
-  vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
+  vim.keymap.set('n', '<leader>gd', vim.lsp.buf.declaration, opts)
   vim.keymap.set('n', '<leader>a', vim.lsp.buf.code_action, opts)
   vim.keymap.set('n', '<leader>g', vim.lsp.buf.definition, opts)
   vim.keymap.set('n', '<leader>t', vim.lsp.buf.hover, opts)
@@ -15,7 +15,7 @@ local on_attach = function(_, bufnr)
   end, opts)
   vim.keymap.set('n', '<leader>D', vim.lsp.buf.type_definition, opts)
   vim.keymap.set('n', '<leader>r', vim.lsp.buf.rename, opts)
-  vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+  vim.keymap.set('n', '<leader>gr', vim.lsp.buf.references, opts)
   vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
   vim.keymap.set('n', '<leader>so', require('telescope.builtin').lsp_document_symbols, opts)
   -- vim.api.nvim_create_user_command("Format", vim.lsp.buf.formatting, {})
@@ -26,7 +26,7 @@ local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
 -- Enable the following language servers with default config
-local servers = { 'ts_ls', 'eslint', 'cssls', 'solargraph', 'yamlls', 'ember', 'rubocop' }
+local servers = { 'ts_ls', 'eslint', 'cssls', 'ruby_lsp', 'yamlls', 'ember' }
 for _, lsp in ipairs(servers) do
   lspconfig[lsp].setup {
     on_attach = on_attach,
@@ -47,6 +47,14 @@ lspconfig.cssmodules_ls.setup {
         client.server_capabilities.definitionProvider = false
     end,
 }
+
+--
+lspconfig.ruby_lsp.setup({
+  init_options = {
+    formatter = 'standard',
+    linters = { 'rubocop', 'standard' },
+  },
+})
 
 -- Example custom server
 -- Make runtime files discoverable to the server
