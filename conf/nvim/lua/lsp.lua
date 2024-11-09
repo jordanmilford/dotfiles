@@ -26,7 +26,7 @@ local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
 -- Enable the following language servers with default config
-local servers = { 'ts_ls', 'eslint', 'cssls', 'ruby_lsp', 'yamlls', 'ember' }
+local servers = { 'ts_ls', 'eslint', 'cssls', 'solargraph', 'yamlls', 'ember' }
 for _, lsp in ipairs(servers) do
   lspconfig[lsp].setup {
     on_attach = on_attach,
@@ -47,14 +47,6 @@ lspconfig.cssmodules_ls.setup {
         client.server_capabilities.definitionProvider = false
     end,
 }
-
---
-lspconfig.ruby_lsp.setup({
-  init_options = {
-    formatter = 'standard',
-    linters = { 'rubocop', 'standard' },
-  },
-})
 
 -- Example custom server
 -- Make runtime files discoverable to the server
