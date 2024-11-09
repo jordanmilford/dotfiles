@@ -26,7 +26,7 @@ local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
 -- Enable the following language servers with default config
-local servers = { 'tsserver', 'eslint', 'cssls', 'solargraph', 'yamlls', 'ember', 'rubocop' }
+local servers = { 'ts_ls', 'eslint', 'cssls', 'solargraph', 'yamlls', 'ember', 'rubocop' }
 for _, lsp in ipairs(servers) do
   lspconfig[lsp].setup {
     on_attach = on_attach,
