@@ -1,0 +1,12 @@
+session_name: 🐘 The Art of Postgres
+start_directory: ~/Documents/The Art of Postgresl
+windows:
+  - window_name: nvim
+    panes:
+      - vim
+  - window_name: shell
+    panes:
+      - 
+  - window_name: psql
+    panes:
+      - psql postgres
