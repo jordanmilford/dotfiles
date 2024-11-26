@@ -4,8 +4,8 @@ local keymapSilentNore = { noremap = true, silent = true }
 vim.api.nvim_set_keymap('n', '-', ':NvimTreeFindFile<CR>', keymapSilentNore)
 
 -- true zen
-vim.api.nvim_set_keymap("n", "<leader>zn", ":TZNarrow<CR>", {})
-vim.api.nvim_set_keymap("v", "<leader>zn", ":'<,'>TZNarrow<CR>", {})
+vim.api.nvim_set_keymap("n", "<leader>z", ":TZNarrow<CR>", {})
+vim.api.nvim_set_keymap("v", "<leader>z", ":'<,'>TZNarrow<CR>", {})
 vim.api.nvim_set_keymap("n", "<leader>zf", ":TZFocus<CR>", {})
 vim.api.nvim_set_keymap("n", "<leader>zm", ":TZMinimalist<CR>", {})
 vim.api.nvim_set_keymap("n", "<leader>za", ":TZAtaraxis<CR>", {})
@@ -21,7 +21,7 @@ vim.api.nvim_set_keymap('n', '<leader>bl', ':BufferOrderByLanguage<CR>', keymapS
 vim.api.nvim_set_keymap('n', '<leader>tf', ':TestFile<CR>', keymapSilentNore)
 vim.api.nvim_set_keymap('n', '<leader>tn', ':TestNearest<CR>', keymapSilentNore)
 vim.g['test#ruby#rspec#options'] = { all = '--format documentation' }
-vim.g['test#ruby#rspec#executable'] = 'doppler run -- bundle exec rspec'
+vim.g['test#ruby#rspec#executable'] = 'bundle exec rspec'
 
 -- Rails keymaps
 vim.api.nvim_set_keymap('n', '<leader>rr', ':!bundle exec rails r %:p<CR>', keymapSilentNore)
@@ -47,11 +47,7 @@ vim.keymap.set('n', '<leader>b', function()
     ignore_current_buffer = false, -- Do not ignore current buffer
     sort_mru = true,         -- Sort Most Recently Used buffers first
     previewer = true,        -- Enable or disable the previewer
-    theme = "dropdown",      -- Use a specific theme (e.g., "dropdown")
-    layout_config = {        -- Customize the layout
-      width = 0.75,          -- Width of the telescope window as a percentage
-      height = 0.5,          -- Height of the telescope window as a percentage
-    },
+    theme = "cursor",      -- Use a specific theme (e.g., "dropdown")
   })
 end)
 vim.keymap.set('n', '<leader>so', function()
@@ -64,3 +60,6 @@ vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float)
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist)
+
+-- Format command
+vim.api.nvim_set_keymap("n", "<leader>n", ":Neoformat<CR>", {})

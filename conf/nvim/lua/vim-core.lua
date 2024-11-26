@@ -4,8 +4,18 @@ vim.o.hlsearch = true
 --Use system clipboard
 vim.opt.clipboard = 'unnamedplus'
 
---Make line numbers default
-vim.wo.number = true
+-- Enable relative line numbers in normal mode
+vim.cmd([[
+  augroup RelativeNumbers
+    autocmd!
+    autocmd InsertEnter * set norelativenumber
+    autocmd InsertLeave * set relativenumber
+  augroup END
+]])
+
+-- Default line number setting
+vim.o.relativenumber = true
+vim.o.number = true
 
 --Enable mouse mode
 -- vim.o.mouse = 'a'

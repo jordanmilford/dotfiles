@@ -50,6 +50,7 @@ alias ll="ls -la"
 alias zshrc="vim ~/.zshrc"
 alias tmuxrc="vim ~/.tmux.conf"
 alias vimrc="vim ~/.config/nvim/init.lua"
+alias vimlsp="vim ~/.config/nvim/lua/lsp.lua"
 
 # --- History Settings ---
 HISTFILE=~/.zsh_history
