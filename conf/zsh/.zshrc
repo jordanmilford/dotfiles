@@ -10,13 +10,22 @@ fi
 source ${ZIM_HOME}/init.zsh
 
 # --- Environment Configuration ---
-export PATH=$HOME/bin:/usr/local/bin:$HOME/Library/Python/3.7/bin:$PATH
+# Add local user binaries
+export PATH="$HOME/bin:$PATH"
+export PATH="/usr/local/bin:$PATH"
+export PATH="$HOME/Library/Python/3.7/bin:$PATH"
+
+# Add application-specific paths
 export PATH="/Users/jordanmilford/apps/elasticsearch/bin:$PATH"
 export PATH="/usr/local/opt/avr-gcc@8/bin:$PATH"
-export PATH="$PATH:$HOME/.rvm/bin" # Keep this at the end to avoid overriding earlier paths
+
+export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/.rvm/bin:$PATH"
+
 export XDG_CONFIG_HOME="$HOME/.config"
 export NVM_DIR="$HOME/.nvm"
 export EDITOR='nvim'
+
 [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
 [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
 
