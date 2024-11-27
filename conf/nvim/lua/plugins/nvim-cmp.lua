@@ -7,12 +7,16 @@ return {
       local cmp = require 'cmp'
       local cmp_autopairs = require('nvim-autopairs.completion.cmp')
       local lspkind = require('lspkind')
+      local luasnip = require('luasnip')  -- Require luasnip for snippet loading
 
       local has_words_before = function()
         if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then return false end
         local line, col = unpack(vim.api.nvim_win_get_cursor(0))
         return col ~= 0 and vim.api.nvim_buf_get_text(0, line-1, 0, line-1, col, {})[1]:match("^%s*$") == nil
       end
+      
+      -- Load snippets from VSCode (this is the line you need)
+      require("luasnip.loaders.from_vscode").lazy_load()
 
       cmp.setup {
         mapping = cmp.mapping.preset.insert({
@@ -30,53 +34,79 @@ return {
           ['<S-Tab>'] = function(fallback)
             if cmp.visible() then
               cmp.select_prev_item()
-            -- elseif luasnip.jumpable(-1) then
-              -- luasnip.jump(-1)
             else
               fallback()
             end
           end,
         }),
         formatting = {
-          format = lspkind.cmp_format({
-            mode = 'symbol', -- show only symbol annotations
-            maxwidth = 50, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
-            ellipsis_char = '...', -- when popup menu exceed maxwidth, the truncated part would show ellipsis_char instead (must define maxwidth first)
-
-            -- The function below will be called before any actual modifications from lspkind
-            -- so that you can provide more controls on popup customization. (See [#30](https://github.com/onsails/lspkind-nvim/pull/30))
-            before = function (entry, vim_item)
-              return vim_item
-            end
-          })
+          format = function(entry, vim_item)
+            -- Get the basic formatting from lspkind
+            vim_item = lspkind.cmp_format({
+              mode = 'symbol', -- show only symbol annotations
+              maxwidth = 50, -- prevent the popup from showing more than provided characters
+              ellipsis_char = '...', -- when popup menu exceed maxwidth, the truncated part would show ellipsis_char instead
+            })(entry, vim_item)
+            
+            -- Add source name to the right
+            vim_item.menu = ({
+              copilot = "[Copilot]",
+              nvim_lsp = "[LSP]",
+              buffer = "[Buffer]",
+              path = "[Path]",
+            })[entry.source.name]
+            
+            return vim_item
+          end
         },
-        sources = {
-          { name = "copilot", group_index = 1 },
-          { name = 'nvim_lsp', group_index = 2 },
-          -- { name = 'luasnip' },
+        sources = cmp.config.sources({
+          { name = "copilot" },
+          { name = 'nvim_lsp' },
+          { name = 'luasnip' },
+          { name = 'buffer' },  -- Add buffer source for words from current buffer
+          { name = 'path' }     -- Add path source for filesystem paths
+        }),
+        sorting = {
+          priority_weight = 2,
+          comparators = {
+            cmp.config.compare.offset,
+            cmp.config.compare.exact,
+            cmp.config.compare.score,
+            cmp.config.compare.kind,
+            cmp.config.compare.sort_text,
+            cmp.config.compare.length,
+            cmp.config.compare.order,
+          },
         }
       }
 
+      -- Configure autopairs integration
       cmp.event:on(
         'confirm_done',
         cmp_autopairs.on_confirm_done()
       )
-
     end
-    -- Rest of your plugin spec
   },
   'hrsh7th/cmp-nvim-lsp',
-  -- 'saadparwaiz1/cmp_luasnip',
-  -- 'L3MON4D3/LuaSnip', -- Snippets plugin
-  'rafamadriz/friendly-snippets', -- vscode format snippets
-  'onsails/lspkind.nvim', -- nerd icons in cmp
+  'hrsh7th/cmp-buffer',  -- Add this plugin for buffer completions
+  'hrsh7th/cmp-path',    -- Add this plugin for path completions
+  {
+    "L3MON4D3/LuaSnip",
+    -- follow latest release.
+    version = "v2.*", -- Replace <CurrentMajor> by the latest released major (first number of latest release)
+    -- install jsregexp (optional!).
+    build = "make install_jsregexp"
+  },
+  'saadparwaiz1/cmp_luasnip',
+  'rafamadriz/friendly-snippets',
+  'onsails/lspkind.nvim',
   {
     "zbirenbaum/copilot.lua",
     cmd = "Copilot",
     event = "InsertEnter",
     config = function()
       require("copilot").setup({
-        copilot_node_command = 'node', -- Node.js version must be > 16.x
+        copilot_node_command = 'node',
         suggestion = { enabled = false },
         panel = { enabled = false },
       })
