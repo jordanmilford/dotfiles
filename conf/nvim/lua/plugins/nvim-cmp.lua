@@ -7,15 +7,13 @@ return {
       local cmp = require 'cmp'
       local cmp_autopairs = require('nvim-autopairs.completion.cmp')
       local lspkind = require('lspkind')
-      local luasnip = require('luasnip')  -- Require luasnip for snippet loading
 
       local has_words_before = function()
         if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then return false end
         local line, col = unpack(vim.api.nvim_win_get_cursor(0))
         return col ~= 0 and vim.api.nvim_buf_get_text(0, line-1, 0, line-1, col, {})[1]:match("^%s*$") == nil
       end
-      
-      -- Load snippets from VSCode (this is the line you need)
+
       require("luasnip.loaders.from_vscode").lazy_load()
 
       cmp.setup {
@@ -47,7 +45,6 @@ return {
               maxwidth = 50, -- prevent the popup from showing more than provided characters
               ellipsis_char = '...', -- when popup menu exceed maxwidth, the truncated part would show ellipsis_char instead
             })(entry, vim_item)
-            
             -- Add source name to the right
             vim_item.menu = ({
               copilot = "[Copilot]",
@@ -55,7 +52,6 @@ return {
               buffer = "[Buffer]",
               path = "[Path]",
             })[entry.source.name]
-            
             return vim_item
           end
         },
@@ -63,8 +59,8 @@ return {
           { name = "copilot" },
           { name = 'nvim_lsp' },
           { name = 'luasnip' },
-          { name = 'buffer' },  -- Add buffer source for words from current buffer
-          { name = 'path' }     -- Add path source for filesystem paths
+          { name = 'buffer' },
+          { name = 'path' }
         }),
         sorting = {
           priority_weight = 2,
@@ -88,8 +84,8 @@ return {
     end
   },
   'hrsh7th/cmp-nvim-lsp',
-  'hrsh7th/cmp-buffer',  -- Add this plugin for buffer completions
-  'hrsh7th/cmp-path',    -- Add this plugin for path completions
+  'hrsh7th/cmp-buffer',
+  'hrsh7th/cmp-path',
   {
     "L3MON4D3/LuaSnip",
     -- follow latest release.
