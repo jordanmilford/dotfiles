@@ -1,0 +1,42 @@
+extends typescript
+
+snippet fc "typescript function component"
+	import React from 'react';
+
+	type ${1}Props = {
+    ${2:foo}: ${3:any};
+	};
+	
+	function ${1}(props: ${1}Props) {
+			const {${2:foo}} = props;
+			${0}
+
+			return (
+				<div>
+					${1}: {${2:foo}}
+				</div>
+			)
+	}
+
+	export default ${1};
+
+snippet fcscss "scss styles typescript function component"
+	import React from 'react';
+	import styles from './${1}.module.scss';
+
+	type ${1}Props = {
+    ${2:foo}: ${3:any};
+	};
+	
+	function ${1}(props: ${1}Props) {
+			const {${2:foo}} = props;
+			${0}
+
+			return (
+				<div className={styles.container}>
+					${1}: {${2:foo}}
+				</div>
+			)
+	}
+
+	export default ${1};
