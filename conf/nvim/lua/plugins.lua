@@ -193,7 +193,8 @@ return {
   'sbdchd/neoformat',  -- Format code
   'nvim-treesitter/nvim-treesitter', -- Highlight, edit, and navigate code using a fast incremental parsing library
   'nvim-treesitter/nvim-treesitter-textobjects', -- Additional textobjects for treesitter
-  'neovim/nvim-lspconfig', -- Collection of configurations for built-in LSP client
+  'neovim/nvim-lspconfig', -- Using native vim.lsp.config instead
+  'nvimtools/none-ls.nvim', -- Collection of sources for none-ls (maintained fork of null-ls)
   'gpanders/editorconfig.nvim', -- EditorConfig support
   'joukevandermaas/vim-ember-hbs', -- Ember.js HBS highlighting
   'jidn/vim-dbml', -- DBML syntax highlighting

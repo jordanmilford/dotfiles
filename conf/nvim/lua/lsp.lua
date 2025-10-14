@@ -1,5 +1,6 @@
--- LSP settings
-local lspconfig = require 'lspconfig'
+-- LSP settings for Nvim 0.11+
+-- Migrated from require'lspconfig' to vim.lsp.config/vim.lsp.enable
+
 local on_attach = function(_, bufnr)
   local opts = { buffer = bufnr }
   vim.keymap.set('n', '<leader>gd', vim.lsp.buf.declaration, opts)
@@ -26,35 +27,40 @@ local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
 -- Enable the following language servers with default config
-local servers = { 'ts_ls', 'eslint', 'cssls', 'solargraph', 'yamlls', 'ember' }
+local servers = { 'ts_ls', 'eslint', 'cssls', 'solargraph', 'yamlls' }
 for _, lsp in ipairs(servers) do
-  lspconfig[lsp].setup {
+  vim.lsp.config(lsp, {
     on_attach = on_attach,
     capabilities = capabilities,
-  }
+  })
+  vim.lsp.enable(lsp)
 end
 
 -- Configure Ember.js language server
-lspconfig.ember.setup {
+vim.lsp.config('ember', {
+  on_attach = on_attach,
+  capabilities = capabilities,
   filetypes = { "javascript", "handlebars" }
-}
-
+})
+vim.lsp.enable('ember')
 
 -- Configure cssmodules language server
-lspconfig.cssmodules_ls.setup {
-    on_attach = function (client)
-        -- avoid accepting `go-to-definition` responses from this LSP
-        client.server_capabilities.definitionProvider = false
-    end,
-}
+vim.lsp.config('cssmodules_ls', {
+  on_attach = function (client)
+    -- avoid accepting `go-to-definition` responses from this LSP
+    client.server_capabilities.definitionProvider = false
+  end,
+  capabilities = capabilities,
+})
+vim.lsp.enable('cssmodules_ls')
 
--- Example custom server
+-- Configure Lua language server
 -- Make runtime files discoverable to the server
 local runtime_path = vim.split(package.path, ';')
 table.insert(runtime_path, 'lua/?.lua')
 table.insert(runtime_path, 'lua/?/init.lua')
 
-lspconfig.lua_ls.setup {
+vim.lsp.config('lua_ls', {
   on_attach = on_attach,
   capabilities = capabilities,
   settings = {
@@ -80,4 +86,5 @@ lspconfig.lua_ls.setup {
       },
     },
   },
-}
+})
+vim.lsp.enable('lua_ls')

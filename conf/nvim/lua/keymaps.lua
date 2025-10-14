@@ -39,7 +39,7 @@ vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags)
 vim.keymap.set('n', '<leader>st', require('telescope.builtin').tags)
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').grep_string)
 vim.keymap.set('n', '<leader>sp', require('telescope.builtin').live_grep)
-vim.keymap.set('n', '<leader>b', function()
+vim.keymap.set('n', '<leader>bb', function()
   require('telescope.builtin').buffers({
     -- Configuration options go here
     show_all_buffers = true, -- Show all buffers, including hidden ones
