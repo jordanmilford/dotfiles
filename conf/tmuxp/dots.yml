@@ -1,12 +1,15 @@
 session_name: 📄 Dotfiles
-start_directory: ~/GitHub/dotfiles
+start_directory: ~/Documents/GitHub/dotfiles
 windows:
   - window_name: nvim
     panes:
-      - vim
+      - vim .
+  - window_name: claude
+    panes:
+      - claude
   - window_name: shell
     panes:
       - 
   - window_name: git
     panes:
-      - lazygit --use-config-file="${HOME}/.config/lazygit/config.yml"
+      - lazygit
