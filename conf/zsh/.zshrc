@@ -1,3 +1,6 @@
+# --- Homebrew (must be early for tools like starship, rbenv) ---
+export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
+
 # --- Zim Framework Initialization ---
 ZIM_HOME=~/.zim
 if [[ ! -e ${ZIM_HOME}/zimfw.zsh ]]; then
@@ -9,7 +12,6 @@ if [[ ! ${ZIM_HOME}/init.zsh -nt ${ZDOTDIR:-${HOME}}/.zimrc ]]; then
 fi
 source ${ZIM_HOME}/init.zsh
 
-# --- Environment Configuration ---
 # Add local user binaries
 export PATH="$HOME/bin:$PATH"
 export PATH="/usr/local/bin:$PATH"
@@ -26,8 +28,16 @@ export XDG_CONFIG_HOME="$HOME/.config"
 export NVM_DIR="$HOME/.nvm"
 export EDITOR='nvim'
 
-[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
-[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
+# Lazy-load nvm (saves ~1.2s startup)
+_nvm_lazy_load() {
+  unset -f nvm node npm npx
+  [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
+  [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
+}
+nvm() { _nvm_lazy_load; nvm "$@"; }
+node() { _nvm_lazy_load; node "$@"; }
+npm() { _nvm_lazy_load; npm "$@"; }
+npx() { _nvm_lazy_load; npx "$@"; }
 
 # --- Plugin and Framework Configuration ---
 # Base16 Shell
@@ -60,6 +70,9 @@ alias zshrc="vim ~/.zshrc"
 alias tmuxrc="vim ~/.tmux.conf"
 alias vimrc="vim ~/.config/nvim/init.lua"
 alias vimlsp="vim ~/.config/nvim/lua/lsp.lua"
+alias ca="cursor-agent"
+alias claudemd="vim ~/.claude/CLAUDE.md"
+alias clauderc="vim ~/.claude/settings.json"
 
 # --- History Settings ---
 HISTFILE=~/.zsh_history
@@ -71,3 +84,5 @@ DISABLE_AUTO_TITLE='true'    # Ensure to uncomment if needed
 
 # --- Local Config ---
 [[ -f ~/.zshrc_ltx ]] && source ~/.zshrc_ltx
+
+if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi
