@@ -26,3 +26,9 @@
     ~/.config/tmuxp:
       path: conf/tmuxp
       create: true
+    ~/.claude/settings.json:
+      path: conf/claude/settings.json
+      create: true
+    ~/.claude/CLAUDE.md:
+      path: conf/claude/CLAUDE.md
+      create: true
