@@ -7,7 +7,7 @@
   - git
   - git-lfs
   - lua-language-server
-  - mosh --HEAD
+  - mosh
   - neovim
   - rbenv
   - ripgrep
