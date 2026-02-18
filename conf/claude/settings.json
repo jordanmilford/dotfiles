@@ -31,6 +31,7 @@
     "pyright-lsp@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true,
     "us-engineering@us-engineering-ai-tools": true,
-    "lua-lsp@claude-plugins-official": true
+    "lua-lsp@claude-plugins-official": true,
+    "worktrunk@worktrunk": true
   }
 }
