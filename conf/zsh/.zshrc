@@ -25,19 +25,9 @@ export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/.rvm/bin:$PATH"
 
 export XDG_CONFIG_HOME="$HOME/.config"
-export NVM_DIR="$HOME/.nvm"
 export EDITOR='nvim'
 
-# Lazy-load nvm (saves ~1.2s startup)
-_nvm_lazy_load() {
-  unset -f nvm node npm npx
-  [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
-  [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
-}
-nvm() { _nvm_lazy_load; nvm "$@"; }
-node() { _nvm_lazy_load; node "$@"; }
-npm() { _nvm_lazy_load; npm "$@"; }
-npx() { _nvm_lazy_load; npx "$@"; }
+eval "$(fnm env)"
 
 # --- Plugin and Framework Configuration ---
 # Base16 Shell

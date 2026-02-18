@@ -1,10 +1,8 @@
-- create:
-  - ~/.nvm
-
 - install-brew: true
 - brew:
   - docker
   - docker-compose
+  - fnm
   - gh
   - git
   - git-lfs
@@ -12,7 +10,6 @@
   - mosh --HEAD
   - neovim
   - rbenv
-  - nvm
   - ripgrep
   - wget
   - lazygit
