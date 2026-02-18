@@ -1,0 +1,29 @@
+[post-create]
+tmux = """
+PARENT=$([ -n "$TMUX" ] && tmux display-message -p '#S' || echo '')
+SESSION="${PARENT:+${PARENT}/}{{ branch | sanitize }}"
+WD={{ worktree_path }}
+tmux new-session -d -s "$SESSION" -c "$WD" -n nvim
+tmux send-keys -t "$SESSION:nvim" 'nvim .' Enter
+tmux new-window -t "$SESSION" -n claude -c "$WD"
+tmux send-keys -t "$SESSION:claude" claude Enter
+tmux new-window -t "$SESSION" -n shell -c "$WD"
+tmux select-window -t "$SESSION:1"
+[ -n "$TMUX" ] && tmux switch-client -t "$SESSION"
+"""
+
+[post-switch]
+tmux = """
+BRANCH={{ branch | sanitize }}
+[ -z "$TMUX" ] && exit 0
+SESSION=$(tmux list-sessions -F '#S' 2>/dev/null | grep "/${BRANCH}$" | head -1)
+[ -n "$SESSION" ] && tmux switch-client -t "=$SESSION"
+"""
+
+[post-remove]
+tmux = """
+BRANCH={{ branch | sanitize }}
+tmux list-sessions -F '#S' 2>/dev/null | grep "/${BRANCH}$" | while read -r s; do
+  tmux kill-session -t "=$s"
+done
+"""

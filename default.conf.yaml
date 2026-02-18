@@ -32,3 +32,10 @@
     ~/.claude/CLAUDE.md:
       path: conf/claude/CLAUDE.md
       create: true
+    ~/.config/worktrunk:
+      path: conf/worktrunk
+      create: true
+
+- shell:
+  - description: Seed worktrunk config from base.toml if missing
+    command: '[ -f conf/worktrunk/config.toml ] || cp conf/worktrunk/base.toml conf/worktrunk/config.toml'
