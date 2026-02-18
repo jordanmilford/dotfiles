@@ -9,12 +9,6 @@ return {
       local cmp_autopairs = require('nvim-autopairs.completion.cmp')
       local lspkind = require('lspkind')
 
-      local has_words_before = function()
-        if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then return false end
-        local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-        return col ~= 0 and vim.api.nvim_buf_get_text(0, line-1, 0, line-1, col, {})[1]:match("^%s*$") == nil
-      end
-
       require("luasnip.loaders.from_vscode").lazy_load()
       require("luasnip.loaders.from_snipmate").lazy_load()
 
@@ -67,7 +61,6 @@ return {
             })(entry, vim_item)
             -- Add source name to the right
             vim_item.menu = ({
-              copilot = "[Copilot]",
               nvim_lsp = "[LSP]",
               buffer = "[Buffer]",
               path = "[Path]",
@@ -76,7 +69,6 @@ return {
           end
         },
         sources = cmp.config.sources({
-          { name = "copilot" },
           { name = 'nvim_lsp' },
           { name = 'luasnip' },
           { name = 'buffer' },
@@ -116,25 +108,4 @@ return {
   'saadparwaiz1/cmp_luasnip',
   'rafamadriz/friendly-snippets',
   'onsails/lspkind.nvim',
-  {
-    "zbirenbaum/copilot.lua",
-    cmd = "Copilot",
-    event = "InsertEnter",
-    config = function()
-      require("copilot").setup({
-        copilot_node_command = 'node',
-        suggestion = { enabled = false },
-        panel = { enabled = false },
-      })
-    end
-  },
-  {
-    "zbirenbaum/copilot-cmp",
-    dependencies = { "copilot.lua" },
-    config = function ()
-      require("copilot_cmp").setup({
-        suggestion = { auto_trigger = true }
-      })
-    end
-  },
 }
