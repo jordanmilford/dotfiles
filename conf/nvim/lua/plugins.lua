@@ -68,6 +68,8 @@ return {
           -- theme = "catppuccin",
           component_separators = '|',
           section_separators = '',
+          globalstatus = true, -- one statusline across the bottom (no split under
+                               -- the reading-column padding window)
         },
       }
     end
@@ -169,7 +171,15 @@ return {
       dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
       ---@module 'render-markdown'
       ---@type render.md.UserConfig
-      opts = {},
+      opts = {
+        render_modes = { "n", "c", "t" }, -- keep rendered while moving the cursor
+        -- No filled background blocks: keep code delineated by a thin border and
+        -- headings by their (bold, colored) text/icon only.
+        code = { disable_background = true, border = "thin" },
+        -- icons = {} keeps the literal '#'/'##' markers instead of overlaying
+        -- nerd-font glyphs; headings still get their level color.
+        heading = { sign = false, backgrounds = {}, icons = {} },
+      },
   },
   {
      "m4xshen/hardtime.nvim",

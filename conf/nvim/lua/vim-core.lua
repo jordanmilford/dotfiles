@@ -53,6 +53,9 @@ vim.g.maplocalleader = ','
 
 vim.o.cmdheight = 0
 
+-- The left-anchored reading column for markdown is set up in lua/reading_column.lua
+-- (required from init.lua).
+
 -- Highlight on yank
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
 vim.api.nvim_create_autocmd('TextYankPost', {
