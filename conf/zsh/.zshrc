@@ -27,6 +27,10 @@ export PATH="$HOME/.rvm/bin:$PATH"
 export XDG_CONFIG_HOME="$HOME/.config"
 export EDITOR='nvim'
 
+# code-inspector-plugin: open in a new Herdr tab running nvim
+export CODE_EDITOR="$HOME/.local/bin/code-inspector-open"
+export CODE_INSPECTOR_FORMAT_PATH='["{file}","{line}","{column}"]'
+
 eval "$(fnm env)"
 
 # --- Plugin and Framework Configuration ---
@@ -42,6 +46,16 @@ zle -N replace-string
 zle -N replace-string-again
 bindkey '\eg' replace-string-again
 bindkey '\er' replace-string
+function tsesh() {
+  local name="${1:-$(basename "$PWD")}"
+  tmux new-session -d -s "$name" -c "$PWD" 'claude'
+  tmux new-window -t "$name" -c "$PWD" 'lazygit'
+  tmux new-window -t "$name" -c "$PWD" 'nvim'
+  tmux new-window -t "$name" -c "$PWD"
+  tmux select-window -t "$name:1"
+  tmux attach-session -t "$name"
+}
+
 function comment_es() {
   sed -i '' '163 s/^/#/' spec/spec_helper.rb; sed -i '' '171 s/^/#/' spec/spec_helper.rb
 }
@@ -57,6 +71,23 @@ alias f="rg -F"
 alias ls="ls -a"
 alias ll="ls -la"
 alias zshrc="vim ~/.zshrc"
+tkill() {
+  local panes
+  panes=$(tmux list-panes -a -F '#{session_name}:#{window_index}.#{pane_index}' 2>/dev/null)
+  if [[ -z "$panes" ]]; then
+    echo "No tmux sessions running."
+    return 0
+  fi
+  echo "Sending Ctrl+C to all panes..."
+  echo "$panes" | xargs -I {} tmux send-keys -t {} C-c
+  sleep 5
+  echo "Sending second Ctrl+C..."
+  echo "$panes" | xargs -I {} tmux send-keys -t {} C-c
+  # Schedule kill-server in background so it survives tmux teardown
+  (sleep 5 && tmux kill-server) &disown
+  echo "Sessions will be killed in 5 seconds."
+}
+
 alias tmuxrc="vim ~/.tmux.conf"
 alias vimrc="vim ~/.config/nvim/init.lua"
 alias vimlsp="vim ~/.config/nvim/lua/lsp.lua"
@@ -76,3 +107,4 @@ DISABLE_AUTO_TITLE='true'    # Ensure to uncomment if needed
 [[ -f ~/.zshrc_ltx ]] && source ~/.zshrc_ltx
 
 if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi
+export PATH="$HOME/go/bin:$PATH"
