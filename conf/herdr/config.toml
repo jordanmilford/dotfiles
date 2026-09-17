@@ -1,0 +1,55 @@
+onboarding = false
+
+[theme]
+name = "catppuccin"
+auto_switch = true
+dark_name = "catppuccin"
+light_name = "catppuccin-latte"
+
+[theme.custom]
+# Focused sidebar rows use surface_dim (not surface0 / accent). Default
+# #1e1e2e matches the terminal/sidebar bg, so the active row barely shows.
+surface_dim = "#45475a"
+
+[keys]
+prefix = "ctrl+a"
+workspace_picker = "prefix+s"
+settings = "prefix+w"
+reload_config = "prefix+r"
+resize_mode = "prefix+shift+r"
+goto = "prefix+f"
+next_workspace = "ctrl+space"
+
+[[keys.command]]
+key = "prefix+u"
+type = "plugin_action"
+command = "gh-pr.open-pr"
+description = "open PR in browser"
+
+[[keys.command]]
+key = "prefix+i"
+type = "plugin_action"
+command = "gh-pr.refresh"
+description = "refresh PR status"
+
+[ui]
+agent_panel_sort = "spaces"
+show_agent_labels_on_pane_borders = true
+tab_bar_position = "bottom"
+
+[ui.sidebar.agents]
+row_gap = 1
+rows = [
+  [
+    "state_icon",
+    { token = "tab", fg = "#cdd6f4", bold = true, dim = false },
+    { token = "$pr", dim = true },
+  ],
+  [
+    { token = "workspace", dim = true },
+    { token = "agent", dim = true },
+  ],
+]
+
+[ui.toast]
+delivery = "system"
