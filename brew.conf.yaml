@@ -1,21 +1,44 @@
 - install-brew: true
+
+- tap:
+    - cormacrelf/tap
+    - jurplel/tap
+    - oven-sh/bun
+
 - brew:
-  - docker
-  - docker-compose
-  - fnm
-  - gh
-  - git
-  - git-lfs
-  - lua-language-server
-  - mosh
-  - neovim
-  - rbenv
-  - ripgrep
-  - wget
-  - lazygit
-  - tmux
-  - tmuxp
-  - git-delta
-  - bat
-  - gnupg
-  - dopplerhq/cli/doppler
+    - docker
+    - docker-compose
+    - fnm
+    - gh
+    - git
+    - git-lfs
+    - lua-language-server
+    - mosh
+    - neovim
+    - rbenv
+    - pyenv
+    - ripgrep
+    - wget
+    - lazygit
+    - tmux
+    - tmuxp
+    - git-delta
+    - bat
+    - gnupg
+    - dopplerhq/cli/doppler
+    - herdr
+    - oven-sh/bun/bun
+    - worktrunk
+    - starship
+    - fzf
+    - fd
+    - terminal-notifier
+    - crit
+    - cormacrelf/tap/dark-notify
+
+- cask:
+    - iterm2
+    - karabiner-elements
+    - rectangle-pro
+    - jurplel/tap/instant-space-switcher
+    - font-terminess-ttf-nerd-font
