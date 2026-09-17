@@ -35,6 +35,14 @@
     ~/.config/worktrunk:
       path: conf/worktrunk
       create: true
+    ~/.config/herdr/config.toml:
+      path: conf/herdr/config.toml
+      create: true
+      force: true
+    ~/.local/bin/code-inspector-open:
+      path: conf/bin/code-inspector-open
+      create: true
+      force: true
 
 - shell:
   - description: Seed worktrunk config from base.toml if missing

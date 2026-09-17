@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+# Open a file from code-inspector-plugin in a new Herdr tab running nvim.
+# launch-ide spawns this with stdio ignored, so failures also go to the log.
+set -euo pipefail
+
+LOG="${TMPDIR:-/tmp}/code-inspector-open.log"
+FILE="${1:-}"
+LINE="${2:-1}"
+COL="${3:-1}"
+NVIM="${NVIM:-$(command -v nvim || true)}"
+
+log() { printf '%s %s\n' "$(date '+%Y-%m-%dT%H:%M:%S')" "$*" >>"$LOG"; }
+
+die() {
+  log "error: $*"
+  exit 1
+}
+
+[[ -n "$FILE" ]] || die "usage: code-inspector-open <file> [line] [column]"
+[[ -e "$FILE" ]] || die "file does not exist: $FILE"
+[[ -n "$NVIM" ]] || die "nvim is not on PATH"
+
+FILE="$(realpath "$FILE")"
+
+command -v herdr >/dev/null 2>&1 || die "herdr is not on PATH"
+command -v jq >/dev/null 2>&1 || die "jq is not on PATH"
+
+if ! herdr status server >/dev/null 2>&1; then
+  die "herdr server is not running"
+fi
+
+workspace_id="$(herdr workspace list | jq -r '.result.workspaces[]? | select(.focused==true) | .workspace_id' | head -1)"
+[[ -n "$workspace_id" && "$workspace_id" != "null" ]] || die "no focused herdr workspace"
+
+cwd="$(git -C "$(dirname "$FILE")" rev-parse --show-toplevel 2>/dev/null || true)"
+[[ -n "$cwd" ]] || cwd="$(dirname "$FILE")"
+
+label="$(basename "$FILE"):${LINE}"
+
+create_json="$(herdr tab create --workspace "$workspace_id" --cwd "$cwd" --label "$label" --no-focus)" || die "herdr tab create failed: ${create_json:-}"
+tab_id="$(echo "$create_json" | jq -r '.result.tab.tab_id')"
+pane_id="$(echo "$create_json" | jq -r '.result.root_pane.pane_id')"
+[[ -n "$tab_id" && "$tab_id" != "null" ]] || die "tab create returned no tab_id: $create_json"
+[[ -n "$pane_id" && "$pane_id" != "null" ]] || die "tab create returned no pane_id: $create_json"
+
+# Wait for the new pane's shell prompt before submitting nvim.
+if ! herdr pane wait-output "$pane_id" --regex '❯|% |\$ ' --timeout 8000 >/dev/null; then
+  log "warning: timed out waiting for shell prompt in pane=$pane_id; sending nvim anyway"
+fi
+
+nvim_cmd="$(printf "%q '+call cursor(%s, %s)' -- %q" "$NVIM" "$LINE" "$COL" "$FILE")"
+herdr pane run "$pane_id" "$nvim_cmd" >/dev/null || die "herdr pane run nvim failed pane=$pane_id"
+
+herdr tab focus "$tab_id" >/dev/null || log "warning: herdr tab focus failed tab=$tab_id"
+
+# Inspector clicks happen from the browser; bring iTerm (where Herdr is attached) forward.
+osascript -e 'tell application "iTerm" to activate' >/dev/null 2>&1 || true
+
+log "opened herdr workspace=$workspace_id tab=$tab_id pane=$pane_id file=$FILE line=$LINE col=$COL"
